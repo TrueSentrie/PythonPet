@@ -1,4 +1,4 @@
-class PyPet:
+class PythonPet:
     def __init__(self,name:str,age:int,
                  cleanliness:int=100,happiness:int=100,water:int=100,hunger:int=100,
                  diet:dict=None):
@@ -25,7 +25,7 @@ class PyPet:
     
     def feed(self,food:str):
         """
-        PyPet feeds.
+        PythonPet feeds.
 
         Args:
             food(str): The food of the pet.
@@ -45,7 +45,7 @@ class PyPet:
 
     def play(self,toy:str):
         """
-        PyPet plays.
+        PythonPet plays.
 
         Args:
             toy(str): How the pet plays.
@@ -73,7 +73,7 @@ class PyPet:
 
     def bathe(self):
         """
-        PyPet bathes.
+        PythonPet bathes.
         """
         try:
             self.cleanliness=100
@@ -85,10 +85,10 @@ class PyPet:
 
     def isDead(self,killSwitch=False)->bool:
         """
-        Checks if PyPet is dead.
+        Checks if PythonPet is dead.
 
         Args:
-            killSwitch(bool,optional): If killSwitch is True, PyPet is killed. Defaults to False.
+            killSwitch(bool,optional): If killSwitch is True, PythonPet is killed. Defaults to False.
 
         Returns:
             True if hunger, water, and happiness are all 0.

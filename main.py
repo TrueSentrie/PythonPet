@@ -1,5 +1,5 @@
 from pygame import Surface
-from PyPet import PyPet
+from PythonPet import PythonPet
 import pygame
 
 pygame.init()
@@ -7,7 +7,7 @@ pygame.init()
 #Window setup
 windowSize=[800,500]
 screen=pygame.display.set_mode(windowSize)
-pygame.display.set_caption("PyPet")
+pygame.display.set_caption("PythonPet")
 
 #Font
 font=pygame.font.SysFont("Arial",30)
@@ -89,10 +89,10 @@ herbivoreDict={"salad":10,"artichoke":13,"pineapple":15}
 carnivoreDict={"bacon":10,"steak":13,"chicken":15}
 omnivoreDict={**herbivoreDict,**carnivoreDict}
 
-###Initialize PyPet
-P1=PyPet("Jim",100,diet=omnivoreDict)
+###Initialize PythonPet
+P1=PythonPet("Jim",100,diet=omnivoreDict)
 
-###Initialize PyPet stats decrement events
+###Initialize PythonPet stats decrement events
 makeHungry=pygame.USEREVENT+1
 hungryTime=15000
 makeThirsty=pygame.USEREVENT+2
@@ -167,7 +167,7 @@ while run:
                 else:
                     devMode=True
 
-        #Decrement PyPet stats
+        #Decrement PythonPet stats
         if event.type==makeHungry:
             P1.hunger-=1
             print("Hunger -1")
