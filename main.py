@@ -7,7 +7,7 @@ pygame.init()
 #Window setup
 windowSize=[800,500]
 screen=pygame.display.set_mode(windowSize)
-pygame.display.set_caption("Pet Game")
+pygame.display.set_caption("PyPet")
 
 #Font
 font=pygame.font.SysFont("Arial",30)
@@ -75,9 +75,6 @@ def pygamePrint(text:str, x:int, y:int, textFont:str=font, color:tuple=colorsDic
     return Surface(size)
 
 ###Creating the buttons
-#Food buttons
-appleButton=Button(410,10,pygamePrint("apple",410,10).convert_alpha())
-
 #Interact buttons
 feedButton=Button(250,10,feedImg)
 playButton=Button(250,100,playImg)
@@ -97,15 +94,19 @@ P1=PyPet("Jim",100,diet=omnivoreDict)
 
 ###Initialize PyPet stats decrement events
 makeHungry=pygame.USEREVENT+1
+hungryTime=15000
 makeThirsty=pygame.USEREVENT+2
+thirstyTime=30000
 makeDirty=pygame.USEREVENT+3
+dirtyTime=40000
 makeSad=pygame.USEREVENT+4
+sadTime=60000
 keepTime=pygame.USEREVENT+5
-#                      Event | Time in milliseconds
-pygame.time.set_timer(makeHungry,20000)
-pygame.time.set_timer(makeThirsty,40000)
-pygame.time.set_timer(makeDirty,80000)
-pygame.time.set_timer(makeSad,300000)
+#Event|Time in milliseconds
+pygame.time.set_timer(makeHungry,hungryTime)
+pygame.time.set_timer(makeThirsty,thirstyTime)
+pygame.time.set_timer(makeDirty,dirtyTime)
+pygame.time.set_timer(makeSad,sadTime)
 pygame.time.set_timer(keepTime,1000)
 
 run=True
@@ -115,32 +116,38 @@ timeKeeper=0
 while run: 
 
     screen.fill((52,78,91))
+
     if feedButton.buttonHandler():
         P1.feed("salad")
         P1.feed("water")
-        print("Feeding PyPet...")
     if playButton.buttonHandler():
         P1.play("swing")
-        print("Playing with PyPet...")
     if batheButton.buttonHandler():
         P1.bathe()
-        print("Bathing PyPet...")
     if devMode:
         if starveButton.buttonHandler():
-            print("Starving PyPet...")
             P1.hunger=0
         if dehydrateButton.buttonHandler():
-            print("Dehydrating PyPet...")
             P1.water=0
         if dirtyButton.buttonHandler():
-            print("Dirtying PyPet...")
             P1.cleanliness=0
         if deathButton.buttonHandler():
-            print("Killing PyPet...")
-            P1.hunger=0
-            P1.water=0
-            P1.cleanliness=0
-            P1.happiness=0
+            P1.isDead(True)
+    while not devMode and P1.isDead():
+        pygame.display.update()
+        pygamePrint(f"{P1.name} died.",10,360)
+        pygamePrint("Press 'R' to restart.",10,420)
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                run=False
+            if event.type==pygame.KEYDOWN:
+                if event.key == pygame.K_r and P1.isDead():
+                    P1.hunger = 100
+                    P1.water = 100
+                    P1.happiness = 100
+                    P1.cleanliness = 100
+
+    P1.zeroStats()
 
     pygamePrint(f"Name: {P1.name}", 10, 10)
     pygamePrint(f"Age: {P1.age}", 10, 50)
@@ -159,6 +166,7 @@ while run:
                     devMode=False
                 else:
                     devMode=True
+
         #Decrement PyPet stats
         if event.type==makeHungry:
             P1.hunger-=1

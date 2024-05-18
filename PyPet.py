@@ -42,6 +42,7 @@ class PyPet:
                 self.water=100
         except Exception as e:
             print(e)
+
     def play(self,toy:str):
         """
         PyPet plays.
@@ -69,6 +70,7 @@ class PyPet:
                 self.happiness=100
         except Exception as e:
             return e
+
     def bathe(self):
         """
         PyPet bathes.
@@ -80,3 +82,34 @@ class PyPet:
                 self.happiness=100
         except Exception as e:
             return e
+
+    def isDead(self,killSwitch=False)->bool:
+        """
+        Checks if PyPet is dead.
+
+        Args:
+            killSwitch(bool,optional): If killSwitch is True, PyPet is killed. Defaults to False.
+
+        Returns:
+            True if hunger, water, and happiness are all 0.
+        """
+        if self.hunger==0 and self.water==0 and self.happiness==0:
+            return True
+        if killSwitch:
+            self.hunger=0
+            self.water=0
+            self.happiness=0
+            self.cleanliness=0
+            return True
+        else:
+            return False
+
+    def zeroStats(self):
+        if self.hunger<0:
+            self.hunger=0
+        if self.water<0:
+            self.water=0
+        if self.cleanliness<0:
+            self.cleanliness=0
+        if self.happiness<0:
+            self.happiness=0
