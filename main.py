@@ -84,19 +84,22 @@ dehydrateButton=Button(410,100,dehydrateImg)
 dirtyButton=Button(410,190,dirtyImg)
 deathButton=Button(410,280,deathImg)
 
-###Create diet dictionaries
+###Create dictionaries
+#Diet dictionaries
 herbivoreDict={"salad":10,"artichoke":13,"pineapple":15}
 carnivoreDict={"bacon":10,"steak":13,"chicken":15}
 omnivoreDict={**herbivoreDict,**carnivoreDict}
+#Toy box dictionary
+toyDict={"ball":10,"swing":20,"tug o' war":30,"olympic running":50,"strong man competition":80}
 
 ###Initialize PythonPet
-P1=PythonPet("Jim",100,diet=omnivoreDict)
+P1=PythonPet("Jim",100,diet=omnivoreDict,toyBox=toyDict)
 
 ###Initialize PythonPet stats decrement events
 makeHungry=pygame.USEREVENT+1
-hungryTime=15000
+hungryTime=30000
 makeThirsty=pygame.USEREVENT+2
-thirstyTime=30000
+thirstyTime=15000
 makeDirty=pygame.USEREVENT+3
 dirtyTime=40000
 makeSad=pygame.USEREVENT+4
@@ -178,8 +181,9 @@ while run:
             P1.cleanliness-=1
             print("Cleanliness -1")
         if event.type==makeSad:
-            P1.happiness-=1
-            print("Happiness -1")
+            P1.happyModAdjuster()
+            P1.happiness-=P1.happyMod
+            print(f"Happiness -{P1.happyMod}")
         if event.type==keepTime:
             timeKeeper+=1
             print(f"{timeKeeper}")

@@ -1,7 +1,7 @@
 class PythonPet:
     def __init__(self,name:str,age:int,
                  cleanliness:int=100,happiness:int=100,water:int=100,hunger:int=100,
-                 diet:dict=None):
+                 happyMod:int=5,diet:dict=None,toyBox:dict=None):
         """
         Initializes a pet
 
@@ -22,6 +22,8 @@ class PythonPet:
         self.water=water
         self.hunger=hunger
         self.diet=diet
+        self.toyBox=toyBox
+        self.happyMod=happyMod
     
     def feed(self,food:str):
         """
@@ -50,23 +52,20 @@ class PythonPet:
         Args:
             toy(str): How the pet plays.
         """
-        ToyDict={"ball":10,
-                 "swing":20,
-                 "tug o' war":30,
-                 "olympic running":50,
-                 "strong man competition":80}
+        toyDict=self.toyBox
+        decrement=int(toyDict[toy]/2)
 
         try:
-            if self.water<30 or self.hunger<30:
-                raise Exception(f"Error: {self.name} is hungry or thirsty!")
-            if toy not in ToyDict:
+            if toy not in toyDict:
                 raise Exception(f"Error: {self.name} doesn't know how to play {toy}!")
+            if self.hunger-decrement<=0 or self.water-decrement<=0:
+                raise Exception(f"Error: {self.name} is hungry or thirsty!")
             else:
-                self.water-=ToyDict[toy]
-                self.hunger-=ToyDict[toy]
-                self.cleanliness-=int(ToyDict[toy]*1.5)
-                self.happiness+=ToyDict[toy]
-            if self.happiness>100:
+                self.water-=decrement
+                self.hunger-=decrement
+                self.cleanliness-=decrement
+                self.happiness+=toyDict[toy]
+            if self.happiness>=100:
                 self.happiness=100
         except Exception as e:
             return e
@@ -76,10 +75,13 @@ class PythonPet:
         PythonPet bathes.
         """
         try:
-            self.cleanliness=100
-            self.happiness+=10
-            if self.happiness>100:
-                self.happiness=100
+            if self.cleanliness<=60:
+                self.cleanliness=100
+                self.happiness+=10
+                if self.happiness>100:
+                    self.happiness=100
+            else:
+                raise Exception(f"{self.name} doesn't need to bathe yet!")
         except Exception as e:
             return e
 
@@ -93,12 +95,11 @@ class PythonPet:
         Returns:
             True if hunger, water, and happiness are all 0.
         """
-        if self.hunger==0 and self.water==0 and self.happiness==0:
+        if self.hunger==0 and self.water==0:
             return True
         if killSwitch:
             self.hunger=0
             self.water=0
-            self.happiness=0
             self.cleanliness=0
             return True
         else:
@@ -113,3 +114,39 @@ class PythonPet:
             self.cleanliness=0
         if self.happiness<0:
             self.happiness=0
+
+    def happyModAdjuster(self):
+        stats:list=[]
+        self.happyMod=5
+
+        if self.hunger<50 and "isHungry" not in stats:
+            stats.append("isHungry")
+        elif self.hunger>=50 and "isHungry" in stats:
+            stats.remove("isHungry")
+        if self.water<50 and "isDehydrated" not in stats:
+            stats.append("isDehydrated")
+        elif self.water>=50 and "isDehydrated" in stats:
+            stats.remove("isDehydrated")
+        if self.happiness<50 and "isBored" not in stats:
+            stats.append("isBored")
+        elif self.happiness>=50 and "isBored" in stats:
+            stats.remove("isBored")
+        if self.cleanliness<50 and "isDirty" not in stats:
+            stats.append("isDirty")
+        elif self.cleanliness>=50 and "isDirty" in stats:
+            stats.remove("isDirty")
+
+        print(stats)
+        numOfStats=0
+        for stat in stats:
+            numOfStats+=1
+
+        maxMod=int(self.happyMod*numOfStats+self.happyMod)
+        modCap=25
+
+        for stat in stats:
+            self.happyMod+=5
+        if maxMod>modCap:
+            maxMod=modCap
+        if self.happyMod>maxMod:
+            self.happyMod=maxMod
