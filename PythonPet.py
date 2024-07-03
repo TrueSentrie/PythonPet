@@ -1,3 +1,5 @@
+import json
+
 class PythonPet:
     def __init__(self,name:str,age:int,
                  cleanliness:int=100,happiness:int=100,water:int=100,hunger:int=100,
@@ -5,7 +7,7 @@ class PythonPet:
         """
         Initializes a pet
 
-        Args:
+        Params:
             name(str): The name of the pet.
             age(int): The age of the pet.
             cleanliness(int,optional): The cleanliness of the pet. Defaults to 100.
@@ -25,17 +27,19 @@ class PythonPet:
         self.toyBox=toyBox
         self.happyMod=happyMod
     
-    def feed(self,food:str):
+    def feed(self,food:str)->None|Exception:
         """
         PythonPet feeds.
 
-        Args:
+        Params:
             food(str): The food of the pet.
         """
 
         try:
             if food in self.diet:
                 self.hunger+=self.diet[food]
+            else:
+                raise Exception(f"Error: {self.name} doesn't like that food!")
             if self.hunger>100:
                 self.hunger=100
             if food=="water":
@@ -43,15 +47,16 @@ class PythonPet:
             if self.water>100:
                 self.water=100
         except Exception as e:
-            print(e)
+            return e
 
-    def play(self,toy:str):
+    def play(self,toy:str)->None|Exception:
         """
         PythonPet plays.
 
-        Args:
+        Params:
             toy(str): How the pet plays.
         """
+
         toyDict=self.toyBox
         decrement=int(toyDict[toy]/2)
 
@@ -70,10 +75,11 @@ class PythonPet:
         except Exception as e:
             return e
 
-    def bathe(self):
+    def bathe(self)->None|Exception:
         """
         PythonPet bathes.
         """
+
         try:
             if self.cleanliness<=60:
                 self.cleanliness=100
@@ -89,12 +95,13 @@ class PythonPet:
         """
         Checks if PythonPet is dead.
 
-        Args:
+        Params:
             killSwitch(bool,optional): If killSwitch is True, PythonPet is killed. Defaults to False.
 
         Returns:
             True if hunger, water, and happiness are all 0.
         """
+
         if self.hunger==0 and self.water==0:
             return True
         if killSwitch:
@@ -106,6 +113,10 @@ class PythonPet:
             return False
 
     def zeroStats(self):
+        """
+        Handling underflow of stats.
+        """
+
         if self.hunger<0:
             self.hunger=0
         if self.water<0:
@@ -116,37 +127,40 @@ class PythonPet:
             self.happiness=0
 
     def happyModAdjuster(self):
+        """
+        Adjusts the happiness modifier for each stat at or below 50.
+        """
+
         stats:list=[]
         self.happyMod=5
 
+        #This looks so ugly but it works.
         if self.hunger<50 and "isHungry" not in stats:
             stats.append("isHungry")
-        elif self.hunger>=50 and "isHungry" in stats:
+        elif "isHungry" in stats:
             stats.remove("isHungry")
         if self.water<50 and "isDehydrated" not in stats:
             stats.append("isDehydrated")
-        elif self.water>=50 and "isDehydrated" in stats:
+        elif "isDehydrated" in stats:
             stats.remove("isDehydrated")
         if self.happiness<50 and "isBored" not in stats:
             stats.append("isBored")
-        elif self.happiness>=50 and "isBored" in stats:
+        elif "isBored" in stats:
             stats.remove("isBored")
         if self.cleanliness<50 and "isDirty" not in stats:
             stats.append("isDirty")
-        elif self.cleanliness>=50 and "isDirty" in stats:
+        elif "isDirty" in stats:
             stats.remove("isDirty")
 
         print(stats)
-        numOfStats=0
-        for stat in stats:
-            numOfStats+=1
 
-        maxMod=int(self.happyMod*numOfStats+self.happyMod)
-        modCap=25
-
-        for stat in stats:
+        for _ in stats:
             self.happyMod+=5
-        if maxMod>modCap:
-            maxMod=modCap
-        if self.happyMod>maxMod:
-            self.happyMod=maxMod
+
+    def savePet(self):
+        with open(f"Pets/{self.name}.json","w") as save:
+            json.dump(self.__dict__,save,indent=2)
+
+    def loadPet(self,saveFile:str=None):
+        with open(f"{saveFile}","r") as load:
+            self.__dict__=json.load(load)

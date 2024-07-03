@@ -1,0 +1,28 @@
+This is what the data looks like when you export it.
+Feel free to change it however you want.
+Delete this file if you dont want to use it, or delete this text and change the name and age values.
+
+{
+  "name": "Name",
+  "age": 100,
+  "cleanliness": 100,
+  "happiness": 100,
+  "water": 100,
+  "hunger": 100,
+  "diet": {
+    "salad": 10,
+    "artichoke": 13,
+    "pineapple": 15,
+    "bacon": 10,
+    "steak": 13,
+    "chicken": 15
+  },
+  "toyBox": {
+    "ball": 10,
+    "swing": 20,
+    "tug o' war": 30,
+    "olympic running": 50,
+    "strong man competition": 80
+  },
+  "happyMod": 5
+}
